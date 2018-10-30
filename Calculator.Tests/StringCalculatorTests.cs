@@ -50,5 +50,14 @@ namespace Calculator.Tests
             var result = _sut.Add(input);
             Assert.AreEqual(expectedResult, result);
         }
+
+
+        [TestCase("//;\n1;2", 3)]
+        [TestCase("//;\n1;2\n3", 6)]
+        public void Add_ChangeSeperators_ReturnResult(string input, int expectedResult)
+        {
+            var result = _sut.Add(input);
+            Assert.AreEqual(expectedResult, result);
+        }
     }
 }
