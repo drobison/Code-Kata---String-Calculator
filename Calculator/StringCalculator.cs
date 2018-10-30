@@ -10,6 +10,8 @@ namespace Calculator
 
             var delimitter = ',';
 
+            input = input.Replace("\n", delimitter.ToString());
+
             var numbers = input.Split(delimitter);
 
             int sum = 0;

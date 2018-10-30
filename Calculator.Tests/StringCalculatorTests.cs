@@ -41,5 +41,14 @@ namespace Calculator.Tests
             var result = _sut.Add(input);
             Assert.AreEqual(expectedResult, result);
         }
+
+        [TestCase("1\n2", 3)]
+        [TestCase("1\n2,3", 6)]
+        [TestCase("1\n2\n3", 6)]
+        public void Add_NewLinesCanBeSeperators_ReturnResult(string input, int expectedResult)
+        {
+            var result = _sut.Add(input);
+            Assert.AreEqual(expectedResult, result);
+        }
     }
 }
