@@ -88,5 +88,13 @@ namespace Calculator.Tests
             var result = _sut.Add(input);
             Assert.AreEqual(expectedResult, result);
         }
+
+        [TestCase("//[*][^]\n1*2^3", 6)]
+        [TestCase("//[_g][_t]\n1_g2_t3", 6)]
+        public void Add_MultipleSeperators_ReturnResult(string input, int expectedResult)
+        {
+            var result = _sut.Add(input);
+            Assert.AreEqual(expectedResult, result);
+        }
     }
 }

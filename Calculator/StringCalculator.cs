@@ -9,13 +9,13 @@ namespace Calculator
     {
         public int Add(string input)
         {
-            var delimiter = GetDelimiter(ref input);
+            var delimiter = GetDelimiters(ref input);
 
             if (string.IsNullOrEmpty(input)) return 0;
 
-            input = input.Replace("\n", delimiter);
+            input = input.Replace("\n", delimiter.First());
 
-            var numbers = input.Split(new [] { delimiter }, StringSplitOptions.None);
+            var numbers = input.Split( delimiter.ToArray(), StringSplitOptions.None);
 
             var sum = 0;
             var negatives = new List<int>();
@@ -40,17 +40,17 @@ namespace Calculator
         }
 
         /// <summary>
-        /// Determines if an explict delimiter has been set that should be used.  If one has, determine what it is and remove that portion from the input string.
+        /// Determines if delimiter have been set that should be used.  If so, determine what it/they is/are and remove that portion from the input string.
         /// If no delimiter has been specified, defaults to a comma as the seperator.
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        private string GetDelimiter(ref string input)
+        private List<string> GetDelimiters(ref string input)
         {
             // case with no delimiter specified, use comma default
             if (!input.StartsWith("//"))
             {
-                return ",";
+                return new List<string>(){ "," };
             }
 
             var delimiterInput = input.Substring(2, input.IndexOf("\n", StringComparison.Ordinal) - 2);
@@ -59,19 +59,21 @@ namespace Calculator
             // case single delimtter, no brackets
             if (!delimiterInput.Contains("["))
             {
-                return delimiterInput;
+                return new List<string>() {delimiterInput};
             }
 
             // case with brackets
             const string pattern = @"\[(.*?)\]";
             var matches = Regex.Matches(delimiterInput, pattern);
+            var delimiters = new List<string>();
             foreach (Match match in matches)
             {
                 // for now assume there is only 1, more to come
-                return match.Groups[1].Value;
+                delimiters.Add(match.Groups[1].Value);
             }
 
-            throw new Exception("Delimiter not found");
+            return delimiters;
+
         }
     }
 }
