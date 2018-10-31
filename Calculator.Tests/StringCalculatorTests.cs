@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace Calculator.Tests
 {
@@ -58,6 +59,16 @@ namespace Calculator.Tests
         {
             var result = _sut.Add(input);
             Assert.AreEqual(expectedResult, result);
+        }
+
+        [TestCase("1,-2", "negatives not allowed -2")]
+        [TestCase("-1,2", "negatives not allowed -1")]
+        [TestCase("-1,-2", "negatives not allowed -1, -2")]
+        [TestCase("//;\n1;-2", "negatives not allowed -2")]
+        public void Add_WithNegatives_ThrowError(string input, string expectedMessage)
+        {
+            var ex = Assert.Throws<Exception>(() => _sut.Add(input));
+            Assert.AreEqual(expectedMessage, ex.Message);
         }
     }
 }

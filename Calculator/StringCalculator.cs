@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Calculator
 {
@@ -15,11 +17,21 @@ namespace Calculator
             var numbers = input.Split(delimiter[0]);
 
             int sum = 0;
+            var negatives = new List<int>();
 
-            foreach (var number in numbers)
+            foreach (var stringNumber in numbers)
             {
+                var number = Convert.ToInt32(stringNumber);
+
+                if (number < 0)
+                {
+                    negatives.Add(number);
+                }
+
                 sum += Convert.ToInt32(number);
             }
+
+            if(negatives.Count > 0) throw new Exception($"negatives not allowed {string.Join(", ", negatives.Select(x => x))}" );
 
             return sum;
         }
