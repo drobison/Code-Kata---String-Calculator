@@ -26,7 +26,9 @@ namespace Calculator
                 if (number < 0)
                 {
                     negatives.Add(number);
+                    continue;
                 }
+                if(number > 1000) continue;
 
                 sum += Convert.ToInt32(number);
             }

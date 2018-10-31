@@ -70,5 +70,14 @@ namespace Calculator.Tests
             var ex = Assert.Throws<Exception>(() => _sut.Add(input));
             Assert.AreEqual(expectedMessage, ex.Message);
         }
+
+        [TestCase("//;\n1001;2", 2)]
+        [TestCase("5001,139", 139)]
+        [TestCase("1000,999", 1999)]
+        public void Add_NumbersOver1000_ShouldBeIgnoredInResult(string input, int expectedResult)
+        {
+            var result = _sut.Add(input);
+            Assert.AreEqual(expectedResult, result);
+        }
     }
 }
