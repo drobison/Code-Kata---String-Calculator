@@ -7,7 +7,7 @@ namespace Calculator
 {
     public class StringCalculator
     {
-        public int Add(string input)
+        public int Compute(string input, OperationEnum operation = OperationEnum.Additon)
         {
             var delimiter = GetDelimiters(ref input);
 
@@ -20,6 +20,7 @@ namespace Calculator
             var sum = 0;
             var negatives = new List<int>();
 
+            bool first = true;
             foreach (var stringNumber in numbers)
             {
                 var number = Convert.ToInt32(stringNumber);
@@ -30,13 +31,39 @@ namespace Calculator
                     continue;
                 }
                 if (number > 1000) continue;
-
-                sum += Convert.ToInt32(number);
+                if (first)
+                {
+                    first = false;
+                    sum = number;
+                }
+                else
+                {
+                    sum = PerformOperation(operation, number, sum);
+                }
+                
             }
 
             if (negatives.Count > 0) throw new Exception($"negatives not allowed {string.Join(", ", negatives.Select(x => x))}");
 
             return sum;
+        }
+
+        private int PerformOperation(OperationEnum operation, int number, int sum)
+        {
+            switch (operation)
+            {
+                case OperationEnum.Additon:
+                    return sum + number;
+                case OperationEnum.Subtraction:
+                    return sum - number;
+                case OperationEnum.Multiplication:
+                    return sum * number;
+                case OperationEnum.Division:
+                    return sum / number;
+                default:
+                    throw new Exception("Unsupported operation");
+
+            }
         }
 
         /// <summary>
