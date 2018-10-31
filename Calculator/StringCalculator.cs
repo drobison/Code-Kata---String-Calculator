@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Calculator
 {
@@ -12,11 +13,11 @@ namespace Calculator
 
             if (string.IsNullOrEmpty(input)) return 0;
 
-            input = input.Replace("\n", delimiter.ToString());
+            input = input.Replace("\n", delimiter);
 
-            var numbers = input.Split(delimiter[0]);
+            var numbers = input.Split(new [] { delimiter }, StringSplitOptions.None);
 
-            int sum = 0;
+            var sum = 0;
             var negatives = new List<int>();
 
             foreach (var stringNumber in numbers)
@@ -28,12 +29,12 @@ namespace Calculator
                     negatives.Add(number);
                     continue;
                 }
-                if(number > 1000) continue;
+                if (number > 1000) continue;
 
                 sum += Convert.ToInt32(number);
             }
 
-            if(negatives.Count > 0) throw new Exception($"negatives not allowed {string.Join(", ", negatives.Select(x => x))}" );
+            if (negatives.Count > 0) throw new Exception($"negatives not allowed {string.Join(", ", negatives.Select(x => x))}");
 
             return sum;
         }
@@ -46,14 +47,31 @@ namespace Calculator
         /// <returns></returns>
         private string GetDelimiter(ref string input)
         {
-            if (input.StartsWith("//"))
+            // case with no delimiter specified, use comma default
+            if (!input.StartsWith("//"))
             {
-                var delimter = input.Substring(2, 1);
-                input = input.Remove(0,4);
-                return delimter;
+                return ",";
             }
 
-            return ",";
+            var delimiterInput = input.Substring(2, input.IndexOf("\n", StringComparison.Ordinal) - 2);
+            input = input.Substring(input.IndexOf("\n", StringComparison.Ordinal) + 1);
+
+            // case single delimtter, no brackets
+            if (!delimiterInput.Contains("["))
+            {
+                return delimiterInput;
+            }
+
+            // case with brackets
+            const string pattern = @"\[(.*?)\]";
+            var matches = Regex.Matches(delimiterInput, pattern);
+            foreach (Match match in matches)
+            {
+                // for now assume there is only 1, more to come
+                return match.Groups[1].Value;
+            }
+
+            throw new Exception("Delimiter not found");
         }
     }
 }

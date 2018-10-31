@@ -6,7 +6,7 @@ namespace Calculator.Tests
     [TestFixture]
     public class StringCalculatorTests
     {
-        private StringCalculator _sut { get; set; }
+        private StringCalculator _sut;
 
         [SetUp]
         public void Setup()
@@ -75,6 +75,15 @@ namespace Calculator.Tests
         [TestCase("5001,139", 139)]
         [TestCase("1000,999", 1999)]
         public void Add_NumbersOver1000_ShouldBeIgnoredInResult(string input, int expectedResult)
+        {
+            var result = _sut.Add(input);
+            Assert.AreEqual(expectedResult, result);
+        }
+
+        [TestCase("//[***]\n1***2", 3)]
+        [TestCase("//[*]\n1*2*3", 6)]
+        [TestCase("//[abc]\n100abc200abc300", 600)]
+        public void Add_MultiCharacterSeperators_ReturnResult(string input, int expectedResult)
         {
             var result = _sut.Add(input);
             Assert.AreEqual(expectedResult, result);
